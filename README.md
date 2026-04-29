@@ -27,8 +27,10 @@ Avg:
   start_date: 'YYYY-01-01'
   end_date:   'YYYY-01-01'
 
-oce_cat: /glade/u/home/gmarques/libs/oce-catalogs/reference-datasets.yml
+oce_cat: /glade/work/chengz/ocean_catalogs/reference-datasets.yml
 ```
+
+Note that `oce_cat` must be an absolute path.
 
 The `Transports` section lists ocean sections where volume transports are computed. Edit or extend this list as needed.
 

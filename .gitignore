@@ -1,5 +1,4 @@
 *.o*
-reference-datasets.yml
 PNG/*
 z/*
 native/*

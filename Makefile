@@ -13,7 +13,7 @@ html:
 	cd notebooks && qsub run_notebooks.sh
 
 clean_notebooks:
-	for file in `find . -name "*.ipynb"`; do echo $file ;  jupyter nbconvert --clear-output --inplace $file
+	jupyter nbconvert --clear-output --inplace notebooks/*.ipynb
 
 clean:
 	rm -rf native ncfiles notebooks PNG z *.o*

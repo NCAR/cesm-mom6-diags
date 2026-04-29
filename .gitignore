@@ -1,0 +1,9 @@
+*.o*
+reference-datasets.yml
+PNG/*
+z/*
+native/*
+ncfiles/*
+notebooks/MOM_parameter_doc.all
+notebooks/_*
+notebooks/.ipynb_checkpoints/*

@@ -7,6 +7,7 @@
 #PBS -j oe
 
 source ~/.bashrc
-conda activate  /glade/work/gmarques/conda-envs/mom6-tools
+module load conda
+conda activate mom6-tools
 
 stats.py diag_config.yml -ocean_stats -time_series -nw 6

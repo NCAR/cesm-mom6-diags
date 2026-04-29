@@ -48,7 +48,7 @@ Also update the PBS account (`#PBS -A`) in all `scripts/*.sh` files and in `note
 The scripts expect the `mom6-tools` conda environment:
 
 ```bash
-conda activate /glade/work/gmarques/conda-envs/mom6-tools
+conda activate mom6-tools
 ```
 
 ## Usage

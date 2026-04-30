@@ -34,7 +34,16 @@ Note that `oce_cat` must be an absolute path.
 
 The `Transports` section lists ocean sections where volume transports are computed. Edit or extend this list as needed.
 
-### 2. Configure `notebooks/run_notebooks.sh`
+### 2. Configure `~/.config/dask/ncar-jobqueue.yaml`
+
+`moc.sh` requires large memory. To increase the memory requested, change the following lines in `~/.config/dask/ncar-jobqueue.yaml`:
+
+```
+memory: '16GiB' # Total amount of memory per job
+resource-spec: select=1:ncpus=1:mem=16GB
+```
+
+### 3. Configure `notebooks/run_notebooks.sh`
 
 Set the `CASE` and `COMPSET` variables at the top of `notebooks/run_notebooks.sh` to match your simulation:
 
@@ -45,7 +54,7 @@ COMPSET=BLT1850   # BLT1850 or GIAF
 
 Also update the PBS account (`#PBS -A`) in all `scripts/*.sh` files and in `notebooks/run_notebooks.sh` if needed.
 
-### 3. Activate the conda environment
+### 4. Activate the conda environment
 
 The scripts expect the `mom6-tools` conda environment:
 

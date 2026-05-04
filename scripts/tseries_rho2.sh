@@ -7,6 +7,7 @@
 #PBS -j oe
 
 source ~/.bashrc
-conda activate /glade/work/gmarques/conda-envs/mom6-tools
+module load conda
+conda activate mom6-tools
 
 create_timeseries.py diag_config.yml  -s .mom6.h.rho2.????-??.nc

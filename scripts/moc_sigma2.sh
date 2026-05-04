@@ -7,6 +7,7 @@
 #PBS -j oe
 
 source ~/.bashrc
-conda activate  /glade/work/gmarques/conda-envs/mom6-tools
+module load conda
+conda activate mom6-tools
 
 moc_sigma2.py diag_config.yml -nw 6

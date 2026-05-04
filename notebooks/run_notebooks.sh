@@ -7,9 +7,10 @@
 #PBS -j oe
 
 source ~/.bashrc
-conda activate /glade/work/gmarques/conda-envs/mom6-tools
+module load conda
+conda activate mom6-tools
 
-CASE="b.e30_alpha08o.B1850C_MTso.ne30_t232_wgx3.334"
+CASE="b.e30_alpha08b.B1850C_LTso.ne30_t232_wgx3.328"
 COMPSET=BLT1850 # BLT1850 or GIAF
 
 # generate_toc.py

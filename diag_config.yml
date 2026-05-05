@@ -11,10 +11,10 @@ Avg:
 
 # cesm hist fname conventions
 Fnames:
-  rho2:   '.mom6.h.rho2.????-??.nc'
-  z:      '.mom6.h.z.????-??.nc'
-  native: '.mom6.h.native.????-??.nc'
-  sfc:    '.mom6.h.sfc.????-??.nc'
+  rho2:   '.mom6.h.rho2.*.nc'
+  z:      '.mom6.h.z.*.nc'
+  native: '.mom6.h.native.*.nc'
+  sfc:    '.mom6.h.sfc.*.nc'
   static: '.mom6.h.static.nc'
   geom:   '.mom6.h.ocean_geometry.nc'
 

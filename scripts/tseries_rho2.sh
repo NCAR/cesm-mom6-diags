@@ -10,4 +10,4 @@ source ~/.bashrc
 module load conda
 conda activate mom6-tools
 
-create_timeseries.py diag_config.yml  -s .mom6.h.rho2.*.nc
+mom6-tools_create_timeseries diag_config.yml  -s .mom6.h.rho2.*.nc

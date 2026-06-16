@@ -10,4 +10,4 @@ source ~/.bashrc
 module load conda
 conda activate mom6-tools
  
-diff_rms.py diag_config.yml -nw 6 
+mom6-tools_diff_rms diag_config.yml -nw 6

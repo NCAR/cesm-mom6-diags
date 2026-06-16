@@ -10,4 +10,4 @@ source ~/.bashrc
 module load conda
 conda activate mom6-tools
 
-compute_basin_reductions.py diag_config.yml
+mom6-tools_compute_basin_reductions diag_config.yml

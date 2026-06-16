@@ -10,4 +10,4 @@ source ~/.bashrc
 module load conda
 conda activate mom6-tools
 
-enso.py diag_config.yml -nw 6
+mom6-tools_enso diag_config.yml -nw 6

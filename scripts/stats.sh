@@ -10,4 +10,4 @@ source ~/.bashrc
 module load conda
 conda activate mom6-tools
 
-stats.py diag_config.yml -ocean_stats -time_series -nw 6
+mom6-tools_stats diag_config.yml -ocean_stats -time_series -nw 6

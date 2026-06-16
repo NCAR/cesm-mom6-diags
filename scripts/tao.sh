@@ -10,4 +10,4 @@ source ~/.bashrc
 module load conda
 conda activate mom6-tools
 
-tao_mooring_comparison.py diag_config.yml -nw 6
+mom6-tools_tao_mooring_comparison diag_config.yml -nw 6

@@ -10,4 +10,4 @@ source ~/.bashrc
 module load conda
 conda activate mom6-tools
 
-section_transports.py diag_config.yml -save_ncfile -nw 6
+mom6-tools_section_transports diag_config.yml -save_ncfile -nw 6

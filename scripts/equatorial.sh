@@ -10,4 +10,4 @@ source ~/.bashrc
 module load conda
 conda activate mom6-tools
 
-equatorial_comparison.py diag_config.yml -nw 6
+mom6-tools_equatorial_comparison diag_config.yml -nw 6

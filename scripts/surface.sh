@@ -10,4 +10,4 @@ source ~/.bashrc
 module load conda
 conda activate mom6-tools
 
-surface.py diag_config.yml -nw 6
+mom6-tools_surface diag_config.yml -nw 6

@@ -10,4 +10,4 @@ source ~/.bashrc
 module load conda
 conda activate mom6-tools
 
-create_climatology.py diag_config.yml  -s .mom6.h.native.*.nc  -f native
+mom6-tools_create_climatology diag_config.yml  -s .mom6.h.native.*.nc  -f native

@@ -50,6 +50,6 @@ echo "Copying data to webext..."
 ssh tungsten.cgd.ucar.edu "mkdir -p /project/diagnostics/external/${COMPSET}/$CASE/ocn/"
 scp -r _build/html/* tungsten.cgd.ucar.edu:/project/diagnostics/external/${COMPSET}/$CASE/ocn/
 echo "Modifying permissions on webext..."
-ssh tungsten.cgd.ucar.edu "chmod -R 755 /project/diagnostics/external/${COMPSET}/$CASE/ocn"
+ssh tungsten.cgd.ucar.edu "chmod -R 775 /project/diagnostics/external/${COMPSET}/$CASE/"
 echo "Done with website creation and deployment!"
 

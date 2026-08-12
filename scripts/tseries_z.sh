@@ -6,7 +6,6 @@
 #PBS -q casper
 #PBS -j oe
 
-source ~/.bashrc
 module load conda
 conda activate mom6-tools
 

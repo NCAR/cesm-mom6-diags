@@ -7,7 +7,6 @@ all: diags
 
 diags:
 	./run_scripts.sh
-	echo "Remember to copy ncfiles/ to output dir!"
 
 html:
 	cd notebooks && qsub run_notebooks.sh

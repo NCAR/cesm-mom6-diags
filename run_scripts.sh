@@ -1,3 +1,4 @@
+qsub scripts/dwbc.sh
 qsub scripts/climo_native.sh
 qsub scripts/climo_z.sh
 qsub scripts/basin_reductions.sh

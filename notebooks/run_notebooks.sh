@@ -39,6 +39,8 @@ papermill enso.ipynb enso.ipynb
 papermill aaiw_pv.ipynb aaiw_pv.ipynb
 # ssh.ipynb
 papermill ssh.ipynb ssh.ipynb
+# model_26N_transect.ipynb
+papermill model_26N_transect.ipynb model_26N_transect.ipynb
 # build jupyter book
 cd ../
 jb build notebooks

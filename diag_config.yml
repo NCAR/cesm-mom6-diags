@@ -52,3 +52,17 @@ oce_cat: /glade/campaign/cgd/oce/projects/CESM-MOM6/diagnostics/oce-catalogs/ref
 Misc:
   savefigs: True
 
+# dask_jobqueue cluster settings.
+# Edit <username> to your own username.
+# See https://jobqueue.dask.org/en/latest/configuration.html and mom6_tools.jobqueue
+Jobqueue:
+  cluster_class: 'PBSCluster'
+  cores: 1
+  memory: '4GB'
+  processes: 1
+  interface: 'ext' # for derecho, interface: 'ib0' # for casper, interface: 'ext'
+  queue: 'casper' # for derecho, queue: 'develop' # for casper, queue: 'casper'
+  walltime: '02:00:00'
+  resource_spec: 'select=1:ncpus=1:mem=4GB'
+  log_directory: '/glade/derecho/scratch/ajanney/<username>/logs'
+  local_directory: '/glade/derecho/scratch/ajanney/<username>/local-dir'

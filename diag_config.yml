@@ -46,7 +46,7 @@ Transports:
            }
 
 # path to ocean-related datasets catalog
-oce_cat: /glade/u/home/gmarques/libs/oce-catalogs/reference-datasets.yml
+oce_cat: /glade/campaign/cgd/oce/projects/CESM-MOM6/diagnostics/oce-catalogs/reference-datasets.yml
 
 # Miscellaneous Arguments and Variables
 Misc:

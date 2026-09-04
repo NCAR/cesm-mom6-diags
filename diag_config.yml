@@ -4,6 +4,11 @@ Case:
   OCN_DIAG_ROOT: /glade/work/chengz/ocean_diags/B/b.e30_alpha08b.B1850C_LTso.ne30_t232_wgx3.328/ncfiles/
   SNAME: "328"
 
+# optional start and end dates of time series
+TS:
+  start_date: '0052-01-01'
+  end_date: '0073-01-01'
+
 # start and end dates to perform averages
 Avg:
   start_date: '0052-01-01'

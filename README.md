@@ -26,24 +26,52 @@ Case:
 Avg:
   start_date: 'YYYY-01-01'
   end_date:   'YYYY-01-01'
-
-oce_cat: /glade/work/chengz/ocean_catalogs/reference-datasets.yml
 ```
-
-Note that `oce_cat` must be an absolute path.
 
 The `Transports` section lists ocean sections where volume transports are computed. Edit or extend this list as needed.
 
-### 2. Configure `~/.config/dask/ncar-jobqueue.yaml`
+### 2. Configure `oce_cat` in `diag_config.yml` (optional)
 
-`moc.sh` requires large memory. To increase the memory requested, change the following lines in `~/.config/dask/ncar-jobqueue.yaml`:
+The latest version of `reference-datasets.yml` is available at (if you have access)
 
+```bash
+/glade/campaign/cgd/oce/projects/CESM-MOM6/diagnostics/oce-catalogs/
 ```
-memory: '16GiB' # Total amount of memory per job
-resource-spec: select=1:ncpus=1:mem=16GB
+
+And `oce_cat` points to this directory by default:
+
+```yaml
+oce_cat: /glade/campaign/cgd/oce/projects/CESM-MOM6/diagnostics/oce-catalogs/reference-datasets.yml
 ```
 
-### 3. Configure `notebooks/run_notebooks.sh`
+If you don't have access, you can download it from [oce-catalogs](https://ncar.github.io/oce-catalogs/),
+or you can use your own `reference-datasets.yml` file.
+
+### 3. Configure `dask-jobqueue`
+
+`mom6-tools` has migrated away from `NCAR-jobqueue` to `dask-jobqueue`. The relevant configurations are
+in the `jobqueue` section of `diag_config.yml`:
+
+```yaml
+jobqueue:
+  cluster_class: 'PBSCluster'
+  account: <account>
+  cores: 1
+  memory: '16GB'
+  processes: 1
+  interface: 'ext' # for derecho, interface: 'ib0' # for casper, interface: 'ext'
+  queue: 'casper' # for derecho, queue: 'develop' # for casper, queue: 'casper'
+  walltime: '02:00:00'
+  resource_spec: 'select=1:ncpus=1:mem=16GB'
+  log_directory: '/glade/derecho/scratch/<username>/dask/casper/logs'
+  local_directory: '/glade/derecho/scratch/<username>/dask/casper/local-dir'
+```
+
+You should set your account number and user name here, and change the memory request and walltime if needed.
+
+Also update the PBS account (`#PBS -A`) in all `scripts/*.sh` files and in `notebooks/run_notebooks.sh` if needed.
+
+### 4. Configure `notebooks/run_notebooks.sh`
 
 Set the `CASE` and `COMPSET` variables at the top of `notebooks/run_notebooks.sh` to match your simulation:
 
@@ -52,15 +80,16 @@ CASE="your.case.name"
 COMPSET=BLT1850   # BLT1850 or GIAF
 ```
 
-Also update the PBS account (`#PBS -A`) in all `scripts/*.sh` files and in `notebooks/run_notebooks.sh` if needed.
-
-### 4. Activate the conda environment
+### 5. Activate the conda environment
 
 The scripts expect the `mom6-tools` conda environment:
 
 ```bash
 conda activate mom6-tools
 ```
+
+This is done automatically when you run scripts and notebooks. You need to activate `mom6-tools`
+manually only if you want to clear all notebook outputs (`make clean_notebooks`).
 
 ## Usage
 
@@ -92,6 +121,7 @@ This runs `run_scripts.sh`, which submits the following PBS jobs to Casper:
 | `drift_so.sh` | Salinity drift |
 | `rms_so.sh` | Salinity RMS error |
 | `tao.sh` | TAO mooring diagnostics |
+| `dwbc.sh` | Deep western boundary current |
 
 After jobs complete, copy the output NetCDF files to your `OCN_DIAG_ROOT`:
 
@@ -127,6 +157,7 @@ This submits `notebooks/run_notebooks.sh` to Casper, which:
 | `enso.ipynb` | ENSO |
 | `aaiw_pv.ipynb` | AAIW potential vorticity |
 | `ssh.ipynb` | Sea surface height |
+| `model_26N_transect.ipynb` | Mean meridional velocity at 26.5N |
 
 ## Utility targets
 

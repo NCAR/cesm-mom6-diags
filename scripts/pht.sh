@@ -1,7 +1,7 @@
 #!/bin/bash
 #PBS -N pht
 #PBS -A NCGD0011
-#PBS -l select=1:ncpus=1:mem=4GB
+#PBS -l select=1:ncpus=1:mem=16GB
 #PBS -l walltime=01:00:00
 #PBS -q casper
 #PBS -j oe

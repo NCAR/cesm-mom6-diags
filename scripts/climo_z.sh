@@ -9,4 +9,4 @@
 module load conda
 conda activate mom6-tools
 
-mom6-tools_create_climatology diag_config.yml  -s .mom6.h.z.*.nc  -f z
+mom6-tools_create_climatology diag_config.yml -f z

@@ -9,4 +9,4 @@
 module load conda
 conda activate mom6-tools
 
-mom6-tools_section_transports diag_config.yml -save_ncfile -nw 6
+mom6-tools_section_transports diag_config.yml -nw 6

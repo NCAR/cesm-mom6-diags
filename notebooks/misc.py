@@ -131,7 +131,6 @@ print("Last update:", date.today())
 grd = []
 grd_xr = []
 depth = []
-basin_code = []
 
 for i in range(len(casename)):
   geom_file = glob.glob(OUTDIR[i]+'/*.mom6.h.ocean_geometry.nc')[0]
@@ -150,12 +149,19 @@ for i in range(len(casename)):
 
   depth_tmp[np.isnan(depth_tmp)] = 0.0
   depth.append(depth_tmp)
-  # remote Nan's, otherwise genBasinMasks won't work
-  depth_mask = depth[i].copy()
-  depth_mask[np.isnan(depth_mask)] = 0.0
-  print(depth_mask.shape)
+  print(depth[i].shape)
   print(grd[i])
-  basin_code.append(genBasinMasks(grd[i].geolon, grd[i].geolat, depth_mask, xda=True))
+
+def compute_basin_code(basin_from_file=None):
+  """Returns a list of basin-mask DataArrays (one per case, same order as casename),
+  as returned by genBasinMasks(..., xda=True). If basin_from_file is given, it is
+  passed through to genBasinMasks for every case instead of computing the masks from
+  the grid (see genBasinMasks's basin_from_file argument)."""
+  codes = []
+  for i in range(len(casename)):
+    codes.append(genBasinMasks(grd[i].geolon, grd[i].geolat, depth[i],
+                                basin_from_file=basin_from_file))
+  return codes
 
 def get_heat_transport_obs():
     """Plots model vs obs poleward heat transport for the global, Pacific and Atlantic basins"""

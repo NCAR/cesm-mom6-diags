@@ -1,7 +1,7 @@
 # Case info
 Case:
   CASEROOT: /glade/p/cesmdata/cseg/runs/cesm2_0/b.e30_alpha08b.B1850C_LTso.ne30_t232_wgx3.328/
-  OCN_DIAG_ROOT: /glade/work/chengz/ocean_diags/B/b.e30_alpha08b.B1850C_LTso.ne30_t232_wgx3.328/ncfiles/
+  OCN_DIAG_ROOT: /glade/work/ajanney/ocean_diags/B/b.e30_alpha08b.B1850C_LTso.ne30_t232_wgx3.328/ncfiles/
   SNAME: "328"
 
 # start and end dates to perform averages
@@ -53,11 +53,10 @@ Misc:
   savefigs: True
 
 # dask_jobqueue cluster settings.
-# Edit <username> to your own username.
 # See https://jobqueue.dask.org/en/latest/configuration.html and mom6_tools.jobqueue
 Jobqueue:
   cluster_class: 'PBSCluster'
-  account: <account>
+  account: $PBS_ACCOUNT
   cores: 1
   memory: '16GB'
   processes: 1
@@ -65,5 +64,5 @@ Jobqueue:
   queue: 'casper' # for derecho, queue: 'develop' # for casper, queue: 'casper'
   walltime: '02:00:00'
   resource_spec: 'select=1:ncpus=1:mem=16GB'
-  log_directory: '/glade/derecho/scratch/<username>/dask/casper/logs'
-  local_directory: '/glade/derecho/scratch/<username>/dask/casper/local-dir'
+  log_directory: /glade/derecho/scratch/$USER/dask/casper/logs
+  local_directory: /glade/derecho/scratch/$USER/dask/casper/local-dir

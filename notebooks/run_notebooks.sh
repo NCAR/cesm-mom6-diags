@@ -9,6 +9,26 @@
 module load conda
 conda activate mom6-tools
 
+# This CLI flag will be migrated to diag_config.yml in the future:
+# -b/--basin <file>: path to a precomputed basin-mask file, forwarded to
+# ts_biases.ipynb, moc.ipynb and pht.ipynb as the basin_from_file parameter
+# (see genBasinMasks's basin_from_file argument). Default is unset, which
+# makes those notebooks compute the basin masks from the grid, as before.
+# When submitting via PBS, pass this through qsub's -F option, e.g.:
+#   qsub -F "-b /path/to/basin.nc" run_notebooks.sh
+BASIN=""
+while getopts "b:" opt; do
+  case $opt in
+    b) BASIN="$OPTARG" ;;
+    *) echo "Usage: $0 [-b basin_from_file]"; exit 1 ;;
+  esac
+done
+
+BASIN_ARGS=()
+if [ -n "$BASIN" ]; then
+  BASIN_ARGS=(-p basin_from_file "$BASIN")
+fi
+
 CASE="b.e30_alpha08b.B1850C_LTso.ne30_t232_wgx3.328"
 COMPSET=BLT1850 # BLT1850 or GIAF
 
@@ -17,11 +37,11 @@ python generate_toc.py
 # generate_intro.py
 python generate_intro.py
 # ts_biases.ipynb
-papermill ts_biases.ipynb ts_biases.ipynb
+papermill ts_biases.ipynb ts_biases.ipynb "${BASIN_ARGS[@]}"
 # moc.ipynb
-papermill moc.ipynb moc.ipynb
+papermill moc.ipynb moc.ipynb "${BASIN_ARGS[@]}"
 # pht.ipynb
-papermill pht.ipynb pht.ipynb
+papermill pht.ipynb pht.ipynb "${BASIN_ARGS[@]}"
 # mld.ipynb
 papermill mld.ipynb mld.ipynb
 # bld.ipynb

@@ -30,22 +30,25 @@ Avg:
 
 The `Transports` section lists ocean sections where volume transports are computed. Edit or extend this list as needed.
 
-### 2. Configure `oce_cat` in `diag_config.yml` (optional)
-
-The latest version of `reference-datasets.yml` is available at (if you have access)
-
-```bash
-/glade/campaign/cgd/oce/projects/CESM-MOM6/diagnostics/oce-catalogs/
-```
-
-And `oce_cat` points to this directory by default:
+### 2. Configure the `Misc` section of `diag_config.yml` (optional)
 
 ```yaml
-oce_cat: /glade/campaign/cgd/oce/projects/CESM-MOM6/diagnostics/oce-catalogs/reference-datasets.yml
+Misc:
+  savefigs: True
+  png_dir: PNG
+  # path to ocean-related datasets catalog
+  oce_cat: /glade/campaign/cgd/oce/projects/CESM-MOM6/diagnostics/oce-catalogs/reference-datasets.yml
+  basin_file: ''
 ```
 
-If you don't have access, you can download it from [oce-catalogs](https://ncar.github.io/oce-catalogs/),
-or you can use your own `reference-datasets.yml` file.
+- `png_dir`: directory where the scripts write PNG figures and the notebooks read them from.
+  A relative path is relative to the directory containing `diag_config.yml`. Defaults to `PNG`.
+- `oce_cat`: path to the ocean-related datasets catalog. The latest version of `reference-datasets.yml`
+  is available at (if you have access) `/glade/campaign/cgd/oce/projects/CESM-MOM6/diagnostics/oce-catalogs/`,
+  which is also the default. If you don't have access, you can download it from
+  [oce-catalogs](https://ncar.github.io/oce-catalogs/), or you can use your own `reference-datasets.yml` file.
+- `basin_file`: path to a netCDF file with precomputed basin masks. If empty (default), the basin masks
+  are computed from the model grid.
 
 ### 3. Configure `dask-jobqueue`
 

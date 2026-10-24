@@ -64,7 +64,9 @@ averages = diag_config.get('Avg', {})
 start_date = averages.get('start_date', 'Unknown start_date')
 end_date = averages.get('end_date', 'Unknown end_date')
 
-ocean_catalog = diag_config['oce_cat']
+misc = diag_config.get('Misc') or {}
+ocean_catalog = misc.get('oce_cat') or \
+    '/glade/campaign/cgd/oce/projects/CESM-MOM6/diagnostics/oce-catalogs/reference-datasets.yml'
 
 # Generate the content for the Markdown file
 markdown_content = (

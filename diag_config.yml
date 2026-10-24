@@ -50,12 +50,14 @@ Transports:
               'h.Bosporus_Strait':['vmo', None],
            }
 
-# path to ocean-related datasets catalog
-oce_cat: /glade/campaign/cgd/oce/projects/CESM-MOM6/diagnostics/oce-catalogs/reference-datasets.yml
-
 # Miscellaneous Arguments and Variables
 Misc:
   savefigs: True
+  png_dir: PNG
+  # path to ocean-related datasets catalog
+  oce_cat: /glade/campaign/cgd/oce/projects/CESM-MOM6/diagnostics/oce-catalogs/reference-datasets.yml
+  # path to pre-computed basin mask file; if empty, compute basin mask with genBasinMasks
+  basin_file: ''
 
 # dask_jobqueue cluster settings.
 # Edit <username> to your own username.

@@ -8,6 +8,7 @@ import getpass
 import os
 import subprocess
 import netCDF4
+import intake
 import cartopy.crs as ccrs
 import cartopy.feature
 import cartopy.feature as cfeature
@@ -70,6 +71,18 @@ yml_path = os.path.join(script_dir, '..', 'diag_config.yml')
 
 diag_config_yml = yaml.load(open(yml_path,'r'), Loader=yaml.Loader)
 
+# PNG directory written by the mom6-tools scripts; a relative png_dir is
+# relative to where the scripts run, i.e. the directory holding diag_config.yml
+misc_config = diag_config_yml.get('Misc') or {}
+png_dir = os.path.join(os.path.dirname(yml_path), misc_config.get('png_dir') or 'PNG')
+oce_cat = misc_config.get('oce_cat') or \
+            '/glade/campaign/cgd/oce/projects/CESM-MOM6/diagnostics/oce-catalogs/reference-datasets.yml'
+basin_file = misc_config.get('basin_file') or ''
+
+def open_oce_catalog():
+  """Opens the ocean-related datasets catalog (Misc: oce_cat in diag_config.yml)"""
+  return intake.open_catalog(oce_cat)
+
 #diag_config_yml = yaml.load(open('../diag_config.yml','r'),
 #                            Loader=yaml.Loader)
 # initialize lists
@@ -131,7 +144,6 @@ print("Last update:", date.today())
 grd = []
 grd_xr = []
 depth = []
-basin_code = []
 
 for i in range(len(casename)):
   geom_file = glob.glob(OUTDIR[i]+'/*.mom6.h.ocean_geometry.nc')[0]
@@ -150,12 +162,19 @@ for i in range(len(casename)):
 
   depth_tmp[np.isnan(depth_tmp)] = 0.0
   depth.append(depth_tmp)
-  # remote Nan's, otherwise genBasinMasks won't work
-  depth_mask = depth[i].copy()
-  depth_mask[np.isnan(depth_mask)] = 0.0
-  print(depth_mask.shape)
+  print(depth[i].shape)
   print(grd[i])
-  basin_code.append(genBasinMasks(grd[i].geolon, grd[i].geolat, depth_mask, xda=True))
+
+def compute_basin_code():
+  """Returns a list of basin-mask DataArrays (one per case, same order as casename),
+  as returned by genBasinMasks(..., xda=True). If basin_file (Misc: basin_file in
+  diag_config.yml) is set, it is passed through to genBasinMasks for every case instead
+  of computing the masks from the grid (see genBasinMasks's basin_from_file argument)."""
+  codes = []
+  for i in range(len(casename)):
+    codes.append(genBasinMasks(grd[i].geolon, grd[i].geolat, depth[i],
+                                basin_from_file=basin_file))
+  return codes
 
 def get_heat_transport_obs():
     """Plots model vs obs poleward heat transport for the global, Pacific and Atlantic basins"""

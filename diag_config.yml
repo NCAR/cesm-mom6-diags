@@ -50,12 +50,19 @@ Transports:
               'h.Bosporus_Strait':['vmo', None],
            }
 
+# Observation Arguments and Variables
+Obs:
+  # path to ocean-related datasets catalog
+  oce_cat: /glade/campaign/cgd/oce/projects/CESM-MOM6/diagnostics/oce-catalogs/reference-datasets.yml
+  # Name of the WOA data in the ocean catalogs
+  WOA: woa-2018-tx2_3v2-annual-all
+  # Name of the MLD data in the ocean catalogs
+  MLD: mld-deboyer-2023-tx2_3v2
+
 # Miscellaneous Arguments and Variables
 Misc:
   savefigs: True
   png_dir: PNG
-  # path to ocean-related datasets catalog
-  oce_cat: /glade/campaign/cgd/oce/projects/CESM-MOM6/diagnostics/oce-catalogs/reference-datasets.yml
   # path to pre-computed basin mask file; if empty, compute basin mask with genBasinMasks
   basin_file: ''
 

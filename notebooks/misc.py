@@ -71,16 +71,20 @@ yml_path = os.path.join(script_dir, '..', 'diag_config.yml')
 
 diag_config_yml = yaml.load(open(yml_path,'r'), Loader=yaml.Loader)
 
+obs_config = diag_config_yml.get('Obs') or {}
+oce_cat = obs_config.get('oce_cat') or \
+            '/glade/campaign/cgd/oce/projects/CESM-MOM6/diagnostics/oce-catalogs/reference-datasets.yml'
+woa_name = obs_config.get('WOA') or 'woa-2018-tx2_3v2-annual-all'
+mld_name = obs_config.get('MLD') or 'mld-deboyer-2023-tx2_3v2'
+
 # PNG directory written by the mom6-tools scripts; a relative png_dir is
 # relative to where the scripts run, i.e. the directory holding diag_config.yml
 misc_config = diag_config_yml.get('Misc') or {}
 png_dir = os.path.join(os.path.dirname(yml_path), misc_config.get('png_dir') or 'PNG')
-oce_cat = misc_config.get('oce_cat') or \
-            '/glade/campaign/cgd/oce/projects/CESM-MOM6/diagnostics/oce-catalogs/reference-datasets.yml'
 basin_file = misc_config.get('basin_file') or ''
 
 def open_oce_catalog():
-  """Opens the ocean-related datasets catalog (Misc: oce_cat in diag_config.yml)"""
+  """Opens the ocean-related datasets catalog (Obs: oce_cat in diag_config.yml)"""
   return intake.open_catalog(oce_cat)
 
 #diag_config_yml = yaml.load(open('../diag_config.yml','r'),

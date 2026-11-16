@@ -30,27 +30,38 @@ Avg:
 
 The `Transports` section lists ocean sections where volume transports are computed. Edit or extend this list as needed.
 
-### 2. Configure the `Misc` section of `diag_config.yml` (optional)
+### 2. Configure the `Obs` section of `diag_config.yml` (optional)
+
+```yaml
+Obs:
+  # path to ocean-related datasets catalog
+  oce_cat: /glade/campaign/cgd/oce/projects/CESM-MOM6/diagnostics/oce-catalogs/reference-datasets.yml
+  # Name of the WOA data in the ocean catalogs
+  WOA: woa-2018-tx2_3v2-annual-all
+  # Name of the MLD data in the ocean catalogs
+  MLD: mld-deboyer-2023-tx2_3v2
+```
+
+- `oce_cat`: path to the ocean-related datasets catalog. The latest version of `reference-datasets.yml`
+  is available at (if you have access) `/glade/campaign/cgd/oce/projects/CESM-MOM6/diagnostics/oce-catalogs/`,
+  which is also the default. If you don't have access, you can download it from
+  [oce-catalogs](https://ncar.github.io/oce-catalogs/), or you can use your own `reference-datasets.yml` file.
+
+### 3. Configure the `Misc` section of `diag_config.yml` (optional)
 
 ```yaml
 Misc:
   savefigs: True
   png_dir: PNG
-  # path to ocean-related datasets catalog
-  oce_cat: /glade/campaign/cgd/oce/projects/CESM-MOM6/diagnostics/oce-catalogs/reference-datasets.yml
   basin_file: ''
 ```
 
 - `png_dir`: directory where the scripts write PNG figures and the notebooks read them from.
   A relative path is relative to the directory containing `diag_config.yml`. Defaults to `PNG`.
-- `oce_cat`: path to the ocean-related datasets catalog. The latest version of `reference-datasets.yml`
-  is available at (if you have access) `/glade/campaign/cgd/oce/projects/CESM-MOM6/diagnostics/oce-catalogs/`,
-  which is also the default. If you don't have access, you can download it from
-  [oce-catalogs](https://ncar.github.io/oce-catalogs/), or you can use your own `reference-datasets.yml` file.
 - `basin_file`: path to a netCDF file with precomputed basin masks. If empty (default), the basin masks
   are computed from the model grid.
 
-### 3. Configure `dask-jobqueue`
+### 4. Configure `dask-jobqueue`
 
 `mom6-tools` has migrated away from `NCAR-jobqueue` to `dask-jobqueue`. The relevant configurations are
 in the `jobqueue` section of `diag_config.yml`:
@@ -74,7 +85,7 @@ You should set your account number and user name here, and change the memory req
 
 Also update the PBS account (`#PBS -A`) in all `scripts/*.sh` files and in `notebooks/run_notebooks.sh` if needed.
 
-### 4. Configure `notebooks/run_notebooks.sh`
+### 5. Configure `notebooks/run_notebooks.sh`
 
 Set the `CASE` and `COMPSET` variables at the top of `notebooks/run_notebooks.sh` to match your simulation:
 
@@ -83,7 +94,7 @@ CASE="your.case.name"
 COMPSET=BLT1850   # BLT1850 or GIAF
 ```
 
-### 5. Activate the conda environment
+### 6. Activate the conda environment
 
 The scripts expect the `mom6-tools` conda environment:
 

@@ -33,7 +33,12 @@ with open(yaml_path, 'r') as yaml_file:
 
 # Extract information from the YAML file
 case = diag_config.get('Case', {})
-caseroot = case.get('CASEROOT', 'Unknown CASEROOT')
+# Expand $VARS and ~ so the page shows the actual paths (e.g. /glade/work/<user>/...)
+# rather than the raw config strings
+def expand_path(path):
+    return os.path.expanduser(os.path.expandvars(str(path).strip()))
+
+caseroot = expand_path(case.get('CASEROOT', 'Unknown CASEROOT'))
 try:
   case_name = cime_xmlquery(caseroot, 'CASE')
 except:
@@ -57,7 +62,7 @@ try:
 except Exception as e:
   print(f"Error: {e}")
 
-ocn_diag_root = case.get('OCN_DIAG_ROOT', 'Unknown OCN_DIAG_ROOT')
+ocn_diag_root = expand_path(case.get('OCN_DIAG_ROOT', 'Unknown OCN_DIAG_ROOT'))
 sname = case.get('SNAME', 'Unknown SNAME')
 
 averages = diag_config.get('Avg', {})

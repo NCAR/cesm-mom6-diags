@@ -16,7 +16,7 @@ import matplotlib.pyplot as plt
 import numpy.ma as ma
 # mom6_tools
 from mom6_tools.MOM6grid import MOM6grid
-from mom6_tools.m6toolbox import genBasinMasks
+from mom6_tools.m6toolbox import genBasinMasks, expand_path
 from mom6_tools.m6plot import myStats, annotateStats
 from mom6_tools.m6plot import xyplot, ztplot
 from mom6_tools.m6toolbox import weighted_temporal_mean
@@ -100,10 +100,10 @@ ncases = count_word_occurrences(diag_config_yml, word_to_search)
 #ncases = len(diag_config_yml.keys()) - 1
 if ncases < 2:
   # Create the case instance
-  caseroot = diag_config_yml['Case']['CASEROOT']
+  caseroot = expand_path(diag_config_yml['Case']['CASEROOT'])
   casename.append(cime_xmlquery(caseroot, 'CASE'))
   label.append(diag_config_yml['Case']['SNAME'])
-  ocn_path.append(diag_config_yml['Case']['OCN_DIAG_ROOT'])
+  ocn_path.append(expand_path(diag_config_yml['Case']['OCN_DIAG_ROOT']))
   climo_path.append(os.path.join(ocn_path[0], 'climo/'))
   DOUT_S = cime_xmlquery(caseroot, 'DOUT_S')
   if DOUT_S:
@@ -116,10 +116,10 @@ if ncases < 2:
 else:
   for i in range(ncases):
     cname = 'Case{}'.format(i+1)
-    caseroot = diag_config_yml[cname]['CASEROOT']
+    caseroot = expand_path(diag_config_yml[cname]['CASEROOT'])
     casename.append(cime_xmlquery(caseroot, 'CASE'))
     label.append(diag_config_yml[cname]['SNAME'])
-    ocn_path.append(diag_config_yml[cname]['OCN_DIAG_ROOT'])
+    ocn_path.append(expand_path(diag_config_yml[cname]['OCN_DIAG_ROOT']))
     climo_path.append(os.path.join(ocn_path[i], 'climo/'))
     DOUT_S = cime_xmlquery(caseroot, 'DOUT_S')
     if DOUT_S:

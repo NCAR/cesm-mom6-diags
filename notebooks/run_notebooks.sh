@@ -36,6 +36,8 @@ papermill ocean_stats.ipynb ocean_stats.ipynb
 papermill enso.ipynb enso.ipynb
 # aaiw_pv.ipynb
 papermill aaiw_pv.ipynb aaiw_pv.ipynb
+# zonal_means.ipynb
+papermill zonal_means.ipynb zonal_means.ipynb
 # ssh.ipynb
 papermill ssh.ipynb ssh.ipynb
 # model_26N_transect.ipynb

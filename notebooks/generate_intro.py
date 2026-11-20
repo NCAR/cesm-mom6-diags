@@ -1,21 +1,8 @@
-import yaml, os
-import subprocess
+import os
 import shutil
 from datetime import datetime
-
-def cime_xmlquery(caseroot, varname):
-    """run CIME's xmlquery for varname in the directory caseroot, return the value"""
-    try:
-        value = subprocess.check_output(
-            ["./xmlquery", "-N", "--value", varname],
-            stderr=subprocess.STDOUT,
-            cwd=caseroot,
-        )
-    except subprocess.CalledProcessError:
-        value = subprocess.check_output(
-            ["./xmlquery", "--value", varname], stderr=subprocess.STDOUT, cwd=caseroot
-        )
-    return value.decode()
+from mom6_tools.DiagsCase import DiagsCase
+from mom6_tools.m6toolbox import cime_xmlquery
 
 # Get current Linux user and date
 user_name = os.getenv('USER', 'Unknown User')
@@ -27,22 +14,15 @@ yaml_path = '../diag_config.yml'
 # Path for the output Markdown file
 output_md_path = 'intro.md'
 
-# Load the YAML file
-with open(yaml_path, 'r') as yaml_file:
-    diag_config = yaml.safe_load(yaml_file)
-
-# Extract information from the YAML file
-case = diag_config.get('Case', {})
-# Expand $VARS and ~ so the page shows the actual paths (e.g. /glade/work/<user>/...)
-# rather than the raw config strings
-def expand_path(path):
-    return os.path.expanduser(os.path.expandvars(str(path).strip()))
-
-caseroot = expand_path(case.get('CASEROOT', 'Unknown CASEROOT'))
-try:
-  case_name = cime_xmlquery(caseroot, 'CASE')
-except:
-  case_name = 'Unknown case name'
+# Read case settings from diag_config.yml (paths come back with $VARS and ~ expanded)
+dcase = DiagsCase(yaml_path)
+caseroot = dcase.caseroot
+case_name = dcase.casename
+ocn_diag_root = dcase.ocn_diag_root
+sname = dcase.label
+start_date = dcase.start_date
+end_date = dcase.end_date
+ocean_catalog = dcase.oce_cat
 
 try:
   srcroot = cime_xmlquery(caseroot, 'SRCROOT')
@@ -61,17 +41,6 @@ try:
   print(f"File successfully copied to {destination_path}")
 except Exception as e:
   print(f"Error: {e}")
-
-ocn_diag_root = expand_path(case.get('OCN_DIAG_ROOT', 'Unknown OCN_DIAG_ROOT'))
-sname = case.get('SNAME', 'Unknown SNAME')
-
-averages = diag_config.get('Avg', {})
-start_date = averages.get('start_date', 'Unknown start_date')
-end_date = averages.get('end_date', 'Unknown end_date')
-
-misc = diag_config.get('Misc') or {}
-ocean_catalog = misc.get('oce_cat') or \
-    '/glade/campaign/cgd/oce/projects/CESM-MOM6/diagnostics/oce-catalogs/reference-datasets.yml'
 
 # Generate the content for the Markdown file
 markdown_content = (

@@ -5,9 +5,13 @@
 #    $ make html
 
 # Default is to run the following scripts
-all: dwbc climo_native climo_z basin_reductions moc moc_sigma2 pht aaiw_pv \
-     enso transports surface equatorial ts_levels stats drift_thetao \
-     rms_thetao drift_so rms_so tao
+.PHONY: all
+all: diags
+
+.PHONY: diags
+diags: dwbc climo_native climo_z basin_reductions moc moc_sigma2 pht aaiw_pv \
+       enso transports surface equatorial ts_levels stats drift_thetao \
+       rms_thetao drift_so rms_so tao
 
 .PHONY: dwbc
 dwbc:

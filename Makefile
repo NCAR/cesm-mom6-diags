@@ -11,7 +11,7 @@ all: diags
 .PHONY: diags
 diags: dwbc climo_native climo_z basin_reductions moc moc_sigma2 pht aaiw_pv \
        enso transports surface equatorial ts_levels stats drift_thetao \
-       rms_thetao drift_so rms_so tao
+       rms_thetao drift_so rms_so tao zonal_means
 
 .PHONY: dwbc
 dwbc:
@@ -88,6 +88,10 @@ rms_so:
 .PHONY: tao
 tao:
 	qsub scripts/tao.sh
+
+.PHONY: zonal_means
+zonal_means:
+	qsub scripts/zonal_means.sh
 
 .PHONY: html
 html:

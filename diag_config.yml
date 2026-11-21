@@ -8,6 +8,8 @@ Case:
 TS:
   start_date: '0052-01-01'
   end_date: '0073-01-01'
+  # If True, compute annual mean of time series before plotting
+  annual_mean: True
 
 # start and end dates to perform averages
 Avg:
@@ -48,7 +50,7 @@ Transports:
               'h.Robeson_Channel':['umo', None],
               'h.Yucatan_Channel':['vmo', None],
               'h.Bosporus_Strait':['vmo', None],
-           }
+              }
 
 # Observation Arguments and Variables
 Obs:

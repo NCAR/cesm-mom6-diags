@@ -2,21 +2,19 @@ import xarray as xr
 import numpy as np
 from datetime import date
 import matplotlib.pyplot as plt
-import warnings, os, yaml
+import warnings, os
 import matplotlib
 import getpass
-import os
-import subprocess
 import netCDF4
 import intake
 import cartopy.crs as ccrs
 import cartopy.feature
 import cartopy.feature as cfeature
-import matplotlib.pyplot as plt
 import numpy.ma as ma
 # mom6_tools
+from mom6_tools.DiagsCase import DiagsCase
 from mom6_tools.MOM6grid import MOM6grid
-from mom6_tools.m6toolbox import genBasinMasks, expand_path
+from mom6_tools.m6toolbox import genBasinMasks, expand_path, cime_xmlquery
 from mom6_tools.m6plot import myStats, annotateStats
 from mom6_tools.m6plot import xyplot, ztplot
 from mom6_tools.m6toolbox import weighted_temporal_mean
@@ -25,34 +23,6 @@ import glob
 
 warnings.filterwarnings("ignore")
 matplotlib.rcParams.update({'font.size': 12})
-
-
-def cime_xmlquery(caseroot, varname):
-    """run CIME's xmlquery for varname in the directory caseroot, return the value"""
-    try:
-        value = subprocess.check_output(
-            ["./xmlquery", "-N", "--value", varname],
-            stderr=subprocess.STDOUT,
-            cwd=caseroot,
-        )
-    except subprocess.CalledProcessError:
-        value = subprocess.check_output(
-            ["./xmlquery", "--value", varname], stderr=subprocess.STDOUT, cwd=caseroot
-        )
-    return value.decode()
-
-def count_word_occurrences(data, word):
-    count = 0
-    if isinstance(data, dict):
-        for key, value in data.items():
-            count += count_word_occurrences(key, word)
-            count += count_word_occurrences(value, word)
-    elif isinstance(data, list):
-        for item in data:
-            count += count_word_occurrences(item, word)
-    elif isinstance(data, str):
-        count += data.lower().split().count(word.lower())
-    return count
 
 # for plotting, the following was a feedback from Keith Lindsay.
 linestyle = ['solid','solid','solid',
@@ -66,74 +36,42 @@ plt.style.use('tableau-colorblind10')
 
 # Get the directory of the current script
 script_dir = os.path.dirname(os.path.realpath(__file__))
-# Define path to the yaml file 
+# Define path to the yaml file
 yml_path = os.path.join(script_dir, '..', 'diag_config.yml')
 
-diag_config_yml = yaml.load(open(yml_path,'r'), Loader=yaml.Loader)
+# Case manager: reads diag_config.yml and queries the CIME case
+dcase = DiagsCase(yml_path)
+diag_config_yml = dcase.full_config
 
-obs_config = diag_config_yml.get('Obs') or {}
-oce_cat = obs_config.get('oce_cat') or \
-            '/glade/campaign/cgd/oce/projects/CESM-MOM6/diagnostics/oce-catalogs/reference-datasets.yml'
-woa_name = obs_config.get('WOA') or 'woa-2018-tx2_3v2-annual-all'
-mld_name = obs_config.get('MLD') or 'mld-deboyer-2023-tx2_3v2'
+oce_cat = dcase.oce_cat
+woa_name = dcase.woa
+mld_name = dcase.mld
+basin_file = dcase.basin_file
 
 # PNG directory written by the mom6-tools scripts; a relative png_dir is
 # relative to where the scripts run, i.e. the directory holding diag_config.yml
+# (not DiagsCase.png_dir, which is relative to the current working directory)
 misc_config = diag_config_yml.get('Misc') or {}
 png_dir = os.path.join(os.path.dirname(yml_path), misc_config.get('png_dir') or 'PNG')
-basin_file = misc_config.get('basin_file') or ''
 
 def open_oce_catalog():
   """Opens the ocean-related datasets catalog (Obs: oce_cat in diag_config.yml)"""
   return intake.open_catalog(oce_cat)
 
-#diag_config_yml = yaml.load(open('../diag_config.yml','r'),
-#                            Loader=yaml.Loader)
-# initialize lists
-casename=[]
-label = []; OUTDIR=[]
-ocn_path = []; climo_path = []
+# Single case only; the notebooks index these as lists (one entry per case)
+casename = [dcase.casename]
+label = [dcase.label]
+ocn_path = [dcase.ocn_diag_root]
+climo_path = [os.path.join(dcase.ocn_diag_root, 'climo/')]
+# trailing '/' so notebooks can do OUTDIR[i] + '*.nc'
+OUTDIR = [os.path.join(dcase.hist_dir, '')]
 
-word_to_search = 'Case'
-ncases = count_word_occurrences(diag_config_yml, word_to_search)
-
-#ncases = len(diag_config_yml.keys()) - 1
-if ncases < 2:
-  # Create the case instance
-  caseroot = expand_path(diag_config_yml['Case']['CASEROOT'])
-  casename.append(cime_xmlquery(caseroot, 'CASE'))
-  label.append(diag_config_yml['Case']['SNAME'])
-  ocn_path.append(expand_path(diag_config_yml['Case']['OCN_DIAG_ROOT']))
-  climo_path.append(os.path.join(ocn_path[0], 'climo/'))
-  DOUT_S = cime_xmlquery(caseroot, 'DOUT_S')
-  if DOUT_S:
-    out = cime_xmlquery(caseroot, 'DOUT_S_ROOT')+'/ocn/hist/'
-  else:
-    out = cime_xmlquery(caseroot, 'RUNDIR')+'/'
-
-  OUTDIR.append(out)
-
-else:
-  for i in range(ncases):
-    cname = 'Case{}'.format(i+1)
-    caseroot = expand_path(diag_config_yml[cname]['CASEROOT'])
-    casename.append(cime_xmlquery(caseroot, 'CASE'))
-    label.append(diag_config_yml[cname]['SNAME'])
-    ocn_path.append(expand_path(diag_config_yml[cname]['OCN_DIAG_ROOT']))
-    climo_path.append(os.path.join(ocn_path[i], 'climo/'))
-    DOUT_S = cime_xmlquery(caseroot, 'DOUT_S')
-    if DOUT_S:
-      out = cime_xmlquery(caseroot, 'DOUT_S_ROOT')+'/ocn/hist/'
-    else:
-      out = cime_xmlquery(caseroot, 'RUNDIR')+'/'
-
-    OUTDIR.append(out)
-
-print(OUTDIR)
 # set avg dates
-avg = diag_config_yml['Avg']
-start_date = avg['start_date']
-end_date = avg['end_date']
+start_date = dcase.start_date
+end_date = dcase.end_date
+
+# time series: annual means (True) or native/monthly output (False); TS: annual_mean
+to_yearly = dcase.annual_mean
 
 print('Casename is {}'.format(casename))
 print('─' * 60)
@@ -145,19 +83,12 @@ print('Generated by {}'.format(getpass.getuser()))
 print('─' * 60)
 print("Last update:", date.today())
 
-grd = []
-grd_xr = []
+# load grid (static + geometry files from Fnames in diag_config.yml)
+grd = [dcase.get_grid(xrformat=False)]
+grd_xr = [dcase.get_grid(xrformat=True)]
 depth = []
 
 for i in range(len(casename)):
-  geom_file = glob.glob(OUTDIR[i]+'/*.mom6.h.ocean_geometry.nc')[0]
-  if not os.path.exists(geom_file):
-    geom_file = None
-
-  # load grid and pre-difined masks
-  fname = glob.glob(OUTDIR[i]+'*.static.nc')[0]
-  grd.append(MOM6grid(fname, geom_file))
-  grd_xr.append(MOM6grid(fname, geom_file, xrformat=True))
   try:
     # remote Nan's, otherwise genBasinMasks won't work
     depth_tmp=grd[i].depth_ocean
@@ -277,7 +208,7 @@ def heatTrans(advective, diffusive=None, hbd=None, vmask=None, units="W"):
   return HT
 
 # functions to plot volume transport time series
-def plot_transport_time_series(ds, section_name, labels, to_yearly=False, observed_values=None):
+def plot_transport_time_series(ds, section_name, labels, to_yearly=to_yearly, observed_values=None):
     """
     Plot the time series of transport for a given section, with options for yearly aggregation
     and overlaying observed ranges or mean values.

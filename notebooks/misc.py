@@ -70,6 +70,9 @@ OUTDIR = [os.path.join(dcase.hist_dir, '')]
 start_date = dcase.start_date
 end_date = dcase.end_date
 
+# time series: annual means (True) or native/monthly output (False); TS: annual_mean
+to_yearly = dcase.annual_mean
+
 print('Casename is {}'.format(casename))
 print('─' * 60)
 print('Averaged between {} and {}'.format(start_date, end_date))
@@ -205,7 +208,7 @@ def heatTrans(advective, diffusive=None, hbd=None, vmask=None, units="W"):
   return HT
 
 # functions to plot volume transport time series
-def plot_transport_time_series(ds, section_name, labels, to_yearly=False, observed_values=None):
+def plot_transport_time_series(ds, section_name, labels, to_yearly=to_yearly, observed_values=None):
     """
     Plot the time series of transport for a given section, with options for yearly aggregation
     and overlaying observed ranges or mean values.
